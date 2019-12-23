@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdou.gdousystem.dao.PermissionMapper">
+    <resultMap id="BaseResultMap" type="com.gdou.gdousystem.bean.Permission">
+        <id column="permission_id" jdbcType="INTEGER" property="permissionId" />
+        <result column="permission_name" jdbcType="VARCHAR" property="permissionName" />
+    </resultMap>
+
+    <select id="selectPermissionByTeacherId" parameterType="java.lang.String" resultType="com.gdou.gdousystem.bean.Permission">
+        SELECT DISTINCT permission.* FROM permission,role_permission WHERE role_permission.`role_id` IN(
+           SELECT role.role_id FROM role ,teacher_role,teacher WHERE role.role_id=teacher_role.role_id AND teacher.teacher_id=teacher_role.teacher_id AND teacher.teacher_id=#{teacherId}
+        )
+        AND permission.`permission_id`=role_permission.`permission_id`
+    </select>
+</mapper>

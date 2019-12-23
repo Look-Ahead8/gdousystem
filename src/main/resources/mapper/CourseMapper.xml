@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdou.gdousystem.dao.CourseMapper">
+    <resultMap id="BaseResultMap" type="com.gdou.gdousystem.bean.Course">
+        <id column="course_id" jdbcType="VARCHAR" property="courseId"/>
+        <id column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
+        <result column="theoretical_hours" jdbcType="INTEGER" property="theoreticalHours"/>
+        <result column="experimental_hours" jdbcType="INTEGER" property="experimentalHours"/>
+        <result column="credit" jdbcType="DECIMAL" property="credit"/>
+        <result column="course_type" jdbcType="VARCHAR" property="courseType"/>
+        <result column="course_nature" jdbcType="VARCHAR" property="courseNature"/>
+    </resultMap>
+    <select id="selectAllCourses" resultMap="BaseResultMap">
+        SELECT * FROM course
+    </select>
+    <insert id="insertCourse" parameterType="com.gdou.gdousystem.vo.CourseVO">
+        INSERT INTO course(course_id,version,course_name,theoretical_hours,experimental_hours,credit,course_type,course_nature,author_id) VALUES(#{courseId},#{version},#{courseName},#{theoreticalHours},#{experimentalHours},#{credit},#{courseType},#{courseNature},#{authorId})
+    </insert>
+    <update id="updateCourseByCourseIdAndVersion" parameterType="com.gdou.gdousystem.vo.CourseVO">
+        UPDATE course SET  course_name=#{courseName},theoretical_hours=#{theoreticalHours},experimental_hours=#{experimentalHours},credit=#{credit},course_type=#{courseType},course_nature=#{courseNature},author_id=#{authorId}   WHERE course_id=#{courseId} AND version=#{version}
+    </update>
+</mapper>

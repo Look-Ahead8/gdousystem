@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdou.gdousystem.dao.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.gdou.gdousystem.bean.Role">
+        <id column="role_id" jdbcType="INTEGER" property="roleId" />
+        <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    </resultMap>
+
+    <select id="selectRoleByTeacherId" parameterType="java.lang.String" resultType="com.gdou.gdousystem.bean.Role">
+        SELECT role.* FROM role ,teacher_role,teacher WHERE role.role_id=teacher_role.role_id AND teacher.teacher_id=teacher_role.teacher_id AND teacher.teacher_id=#{teacherId}
+    </select>
+</mapper>

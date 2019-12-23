@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdou.gdousystem.dao.TeacherMapper">
+    <resultMap id="BaseResultMap" type="com.gdou.gdousystem.bean.Teacher">
+        <id column="teacher_id" jdbcType="CHAR" property="teacherId" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="CHAR" property="password"/>
+        <result column="major" jdbcType="VARCHAR" property="major"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="phone" jdbcType="CHAR" property="phone"/>
+        <result column="department" jdbcType="VARCHAR" property="department"/>
+    </resultMap>
+    <resultMap id="BaseResultMapWithRole" type="com.gdou.gdousystem.bean.Teacher">
+        <id column="teacher_id" jdbcType="CHAR" property="teacherId" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="CHAR" property="password"/>
+        <result column="major" jdbcType="VARCHAR" property="major"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="phone" jdbcType="CHAR" property="phone"/>
+        <result column="department" jdbcType="VARCHAR" property="department"/>
+        <collection property="role" ofType="com.gdou.gdousystem.bean.Role">
+            <id column="role_id" jdbcType="INTEGER" property="roleId" />
+            <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+        </collection>
+    </resultMap>
+
+    <select id="selectTeacherByTeacherId" parameterType="java.lang.String" resultMap="BaseResultMapWithRole">
+        SELECT teacher.*,role.* FROM teacher LEFT JOIN teacher_role ON teacher.`teacher_id`=teacher_role.`teacher_id` LEFT JOIN role ON role.`role_id` = teacher_role.`role_id`
+WHERE teacher.`teacher_id`=#{teacherId}
+    </select>
+    <select id="selectAllTeachers" resultMap="BaseResultMap">
+        SELECT * FROM teacher
+    </select>
+    <update id="updatePasswordByTeacherId">
+        UPDATE teacher SET password=MD5(#{password}) WHERE teacher_id=#{teacherId}
+    </update>
+    <delete id="deleteTeacherByTeacherId" parameterType="java.lang.String">
+        DELETE FROM teacher WHERE teacher_id=#{teacherId}
+    </delete>
+</mapper>
