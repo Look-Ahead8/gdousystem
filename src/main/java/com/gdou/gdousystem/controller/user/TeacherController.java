@@ -2,6 +2,7 @@ package com.gdou.gdousystem.controller.user;
 
 import com.gdou.gdousystem.bean.Teacher;
 import com.gdou.gdousystem.message.Message;
+import com.gdou.gdousystem.service.RoleService;
 import com.gdou.gdousystem.service.TeacherService;
 import com.gdou.gdousystem.util.MD5Util;
 import com.github.pagehelper.PageHelper;
@@ -50,11 +51,17 @@ public class TeacherController {
     }
 
     @GetMapping("/user/teachers")
-    public Message findAllTeachers(@RequestParam(value = "pn", defaultValue = "1") Integer pn) {
+    public Message findAllTeachersSelective(@RequestParam(value = "pn", defaultValue = "1") Integer pn,@RequestParam(value = "username",defaultValue = "") String username,@RequestParam(value = "roleId",defaultValue = "0")Integer roleId) {
         PageHelper.startPage(pn, 10);
-        List<Teacher> teachers = teacherService.findAllTeachers();
+        List<Teacher> teachers = teacherService.findAllTeachersSelective(username,roleId);
         PageInfo<Teacher> pageInfo = new PageInfo<>(teachers, 5);
         return Message.success().add("pageInfo", pageInfo);
+    }
+
+    @GetMapping("/user/teacher/{teacherId}")
+    public Message findTeacherByTeacherId(@PathVariable("teacherId")String teacherId){
+        Teacher teacher=teacherService.findTeacherByTeacherId(teacherId);
+        return Message.success().add("teacher",teacher);
     }
 
     @PutMapping("/updatepassword")
@@ -78,10 +85,24 @@ public class TeacherController {
         else return Message.fail();
     }
 
-    @GetMapping("/loginteacher")
+    @GetMapping("/user/loginteacher")
     public Message getLoginTeacher(HttpServletRequest request){
         HttpSession session = request.getSession();
         Teacher teacher = (Teacher)session.getAttribute("teacher");
         return Message.success().add("teacher",teacher);
+    }
+
+    @PutMapping("/user/role")
+    public Message updateRoleByTeacherId(@RequestParam("teacherId") String teacherId,@RequestParam("role")Integer[] roles){
+        boolean flag=teacherService.updateRoleByTeacherId(teacherId,roles);
+        if(flag) return Message.success();
+        else return Message.fail();
+    }
+
+    @PutMapping("/user/status")
+    public Message updateStatusByTeacherId(@RequestParam("teacherId")String teacherId){
+        boolean flag=teacherService.updateStatusByTeacherId(teacherId);
+        if(flag) return Message.success();
+        else return Message.fail();
     }
 }

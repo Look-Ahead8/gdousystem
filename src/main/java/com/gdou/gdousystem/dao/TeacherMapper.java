@@ -12,9 +12,19 @@ import java.util.List;
 public interface TeacherMapper {
     Teacher selectTeacherByTeacherId(String teacherId);
 
-    List<Teacher> selectAllTeachers();
+    List<Teacher> selectAllTeachersSelective(@Param("username") String username,@Param("roleId") Integer roleId);
 
     void updatePasswordByTeacherId(@Param("password") String password,@Param("teacherId") String teacherId);
 
     int deleteTeacherByTeacherId(String teacherId);
+
+    void deleteRoleByTeacherId(String teacherId);
+
+    void insertTeacherRole(@Param("teacherId") String teacherId, @Param("roleId") Integer roleId);
+
+    int updateStatusByTeacherId(Teacher teacher);
+
+    int updateTeacherByTeacherId(String teacherId);
+
+    List<Teacher> selectTeacherByMajor(String major);
 }

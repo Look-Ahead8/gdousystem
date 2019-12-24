@@ -1,7 +1,6 @@
 package com.gdou.gdousystem.controller.course;
 
 import com.gdou.gdousystem.bean.Course;
-import com.gdou.gdousystem.controller.BaseController;
 import com.gdou.gdousystem.message.Message;
 import com.gdou.gdousystem.service.CourseService;
 import com.gdou.gdousystem.vo.CourseVO;
@@ -25,7 +24,7 @@ import java.util.Map;
 @RequestMapping("/course")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @ResponseBody
-public class CourseController extends BaseController{
+public class CourseController {
     @Autowired
     private CourseService courseService;
 
@@ -69,8 +68,22 @@ public class CourseController extends BaseController{
         }
     }
 
-    @PostMapping("/test")
-    public Message test(){
-        return Message.success();
+    @GetMapping("/courseid")
+    public Message findAllCourseId(){
+        List<String> list=courseService.findAllCourseId();
+        return Message.success().add("courseId",list);
     }
+
+    @GetMapping("/version")
+    public Message findAllVersionByCourseId(@RequestParam("courseId") String courseId){
+        List<String> list=courseService.findAllVersionByCourseId(courseId);
+        return Message.success().add("version",list);
+    }
+
+    @GetMapping("/course")
+    public Message findCourseByCourseIdAndVersion(@RequestParam("courseId") String courseId,@RequestParam("version") String version){
+        Course course=courseService.findCourseByCourseIdAndVersion(courseId,version);
+        return Message.success().add("course",course);
+    }
+
 }

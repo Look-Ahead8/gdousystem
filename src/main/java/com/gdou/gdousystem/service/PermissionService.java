@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface PermissionService {
     List<Permission> findPermissionByTeacherId(String teacherId);
+
+    List<Permission> findPermissionByRoleId(Integer roleId);
 }

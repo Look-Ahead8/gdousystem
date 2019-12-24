@@ -20,7 +20,6 @@ public class ShiroPermsFilter extends PermissionsAuthorizationFilter {
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-        String requestedWith = httpServletRequest.getHeader("X-Requested-With");
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType("application/json");
         //解决一下跨域问题

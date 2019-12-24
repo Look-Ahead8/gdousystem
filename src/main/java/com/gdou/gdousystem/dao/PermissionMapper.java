@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface PermissionMapper {
     List<Permission> selectPermissionByTeacherId(String teacherId);
+
+    List<Permission> selectPermissionByRoleId(Integer roleId);
 }

@@ -10,5 +10,15 @@ import java.util.List;
  * @date 2019/12/22
  */
 public interface StudentService {
-    List<Student> findAllStudents();
+    List<Student> findAllStudentsSelective(String department,String major,String year);
+
+    Student findStudentByStudentId(String studentId);
+
+    boolean updateStudentByStudentId(Student student);
+
+    List<String> findAllDepartments();
+
+    List<String> findMajorByDepartment(String department);
+
+    List<String> findStudentClassByMajor(String major);
 }

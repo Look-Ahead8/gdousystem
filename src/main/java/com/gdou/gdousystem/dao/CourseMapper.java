@@ -2,6 +2,7 @@ package com.gdou.gdousystem.dao;
 
 import com.gdou.gdousystem.bean.Course;
 import com.gdou.gdousystem.vo.CourseVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,4 +16,10 @@ public interface CourseMapper {
     int insertCourse(CourseVO course);
 
     boolean updateCourseByCourseIdAndVersion(CourseVO courseVO);
+
+    List<String> selectAllCourseId();
+
+    List<String> selectAllVersionByCourseId(String courseId);
+
+    Course selectCourseByCourseIdAndVersion(@Param("courseId") String courseId,@Param("version") String version);
 }

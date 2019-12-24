@@ -28,8 +28,12 @@
         SELECT teacher.*,role.* FROM teacher LEFT JOIN teacher_role ON teacher.`teacher_id`=teacher_role.`teacher_id` LEFT JOIN role ON role.`role_id` = teacher_role.`role_id`
 WHERE teacher.`teacher_id`=#{teacherId}
     </select>
-    <select id="selectAllTeachers" resultMap="BaseResultMap">
-        SELECT * FROM teacher
+    <select id="selectAllTeachersSelective" resultMap="BaseResultMap">
+        SELECT DISTINCT teacher.* FROM teacher LEFT JOIN teacher_role ON teacher.`teacher_id`=teacher_role.`teacher_id` WHERE
+        <if test="roleId!=null">
+            teacher_role.`role_id` LIKE #{roleId} AND
+        </if>
+         teacher.username LIKE #{username}
     </select>
     <update id="updatePasswordByTeacherId">
         UPDATE teacher SET password=MD5(#{password}) WHERE teacher_id=#{teacherId}
@@ -37,4 +41,16 @@ WHERE teacher.`teacher_id`=#{teacherId}
     <delete id="deleteTeacherByTeacherId" parameterType="java.lang.String">
         DELETE FROM teacher WHERE teacher_id=#{teacherId}
     </delete>
+    <delete id="deleteRoleByTeacherId" parameterType="java.lang.String">
+        DELETE teacher_role.* FROM teacher_role,teacher WHERE teacher.`teacher_id`=teacher_role.`teacher_id` AND teacher_role.`teacher_id`=#{teacherId}
+    </delete>
+    <insert id="insertTeacherRole">
+        INSERT INTO teacher_role(teacher_id,role_id) VALUES(#{teacherId},#{roleId})
+    </insert>
+    <update id="updateStatusByTeacherId" parameterType="com.gdou.gdousystem.bean.Teacher">
+        UPDATE teacher SET status=#{status} WHERE teacher_id=#{teacherId}
+    </update>
+    <select id="selectTeacherByMajor" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT teacher_id,username FROM teacher WHERE major=#{major} AND status=1
+    </select>
 </mapper>

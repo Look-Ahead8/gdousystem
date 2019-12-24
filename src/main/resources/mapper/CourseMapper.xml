@@ -20,4 +20,13 @@
     <update id="updateCourseByCourseIdAndVersion" parameterType="com.gdou.gdousystem.vo.CourseVO">
         UPDATE course SET  course_name=#{courseName},theoretical_hours=#{theoreticalHours},experimental_hours=#{experimentalHours},credit=#{credit},course_type=#{courseType},course_nature=#{courseNature},author_id=#{authorId}   WHERE course_id=#{courseId} AND version=#{version}
     </update>
+    <select id="selectAllCourseId" resultType="java.lang.String">
+        SELECT DISTINCT course_id FROM course
+    </select>
+    <select id="selectAllVersionByCourseId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT `version` FROM course WHERE course_id =#{courseId} ORDER BY `version` DESC
+    </select>
+    <select id="selectCourseByCourseIdAndVersion" resultType="com.gdou.gdousystem.bean.Course">
+        SELECT * FROM course WHERE course_id=#{courseId} AND version=#{version}
+    </select>
 </mapper>

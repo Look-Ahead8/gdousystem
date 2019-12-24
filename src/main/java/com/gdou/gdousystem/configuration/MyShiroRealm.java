@@ -69,7 +69,7 @@ public class MyShiroRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String teacherId=authenticationToken.getPrincipal().toString();
         Teacher teacher=teacherService.findTeacherByTeacherId(teacherId);
-        if(teacher==null){
+        if(teacher==null||!teacher.isStatus()){
             return null;
         }else{
             AuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(teacher.getTeacherId(),teacher.getPassword(),getName());

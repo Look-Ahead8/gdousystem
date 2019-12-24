@@ -33,4 +33,19 @@ public class CourseServiceImpl implements CourseService {
     public boolean updateCourseByCourseIdAndVersion(CourseVO courseVO) {
         return courseMapper.updateCourseByCourseIdAndVersion(courseVO);
     }
+
+    @Override
+    public List<String> findAllCourseId() {
+        return courseMapper.selectAllCourseId();
+    }
+
+    @Override
+    public List<String> findAllVersionByCourseId(String courseId) {
+        return courseMapper.selectAllVersionByCourseId(courseId);
+    }
+
+    @Override
+    public Course findCourseByCourseIdAndVersion(String courseId, String version) {
+        return courseMapper.selectCourseByCourseIdAndVersion(courseId,version);
+    }
 }

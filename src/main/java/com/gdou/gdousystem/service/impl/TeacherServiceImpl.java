@@ -33,8 +33,11 @@ public class TeacherServiceImpl implements TeacherService {
      * @return 全部教师
      */
     @Override
-    public List<Teacher> findAllTeachers() {
-        return teacherMapper.selectAllTeachers();
+    public List<Teacher> findAllTeachersSelective(String username,Integer roleId) {
+        username=username.isEmpty()?"%":"%"+username+"%";
+        System.out.println(username);
+        roleId=roleId==0?null:roleId;
+        return teacherMapper.selectAllTeachersSelective(username,roleId);
     }
 
     /**
@@ -49,7 +52,6 @@ public class TeacherServiceImpl implements TeacherService {
        if(password.length()<6||password.length()>16||ensurePassword.length()<6||ensurePassword.length()>16){
            return 1;
        }
-       Teacher teacher=teacherMapper.selectTeacherByTeacherId(teacherId);
        if(!password.equals(ensurePassword)){
            return 2;
        }
@@ -61,4 +63,32 @@ public class TeacherServiceImpl implements TeacherService {
     public boolean deleteTeacherByTeacherId(String teacherId) {
         return teacherMapper.deleteTeacherByTeacherId(teacherId)==1;
     }
+
+    @Override
+    public boolean updateRoleByTeacherId(String teacherId, Integer[] roles) {
+        teacherMapper.deleteRoleByTeacherId(teacherId);
+        for (int i = 0; i <roles.length; i++) {
+            Integer roleId=roles[i];
+            teacherMapper.insertTeacherRole(teacherId,roleId);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateStatusByTeacherId(String teacherId) {
+        Teacher teacher=teacherMapper.selectTeacherByTeacherId(teacherId);
+        teacher.setStatus(!teacher.isStatus());
+        return teacherMapper.updateStatusByTeacherId(teacher)==1;
+    }
+
+    @Override
+    public boolean updateTeacherByTeacherId(String teacherId) {
+        return teacherMapper.updateTeacherByTeacherId(teacherId)==1;
+    }
+
+    @Override
+    public List<Teacher> findTeacherByMajor(String major) {
+        return teacherMapper.selectTeacherByMajor(major);
+    }
+
 }

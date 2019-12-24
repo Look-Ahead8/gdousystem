@@ -12,4 +12,7 @@
         )
         AND permission.`permission_id`=role_permission.`permission_id`
     </select>
+    <select id="selectPermissionByRoleId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT permission.* FROM permission,role_permission WHERE permission.`permission_id`=role_permission.`permission_id` AND role_permission.`role_id`=#{roleId}
+    </select>
 </mapper>

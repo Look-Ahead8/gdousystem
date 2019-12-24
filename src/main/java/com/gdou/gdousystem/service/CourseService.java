@@ -15,4 +15,10 @@ public interface CourseService {
     boolean saveCourse(CourseVO course);
 
     boolean updateCourseByCourseIdAndVersion(CourseVO courseVO);
+
+    List<String> findAllCourseId();
+
+    List<String> findAllVersionByCourseId(String courseId);
+
+    Course findCourseByCourseIdAndVersion(String courseId, String version);
 }

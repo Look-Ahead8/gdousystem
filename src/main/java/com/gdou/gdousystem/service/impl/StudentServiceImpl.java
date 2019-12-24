@@ -18,8 +18,43 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentMapper studentMapper;
+
     @Override
-    public List<Student> findAllStudents() {
-        return studentMapper.selectAllStudents();
+    public List<Student> findAllStudentsSelective(String department, String major, String year) {
+        return studentMapper.selectAllStudentsSelective(toSelectiveSql(department),toSelectiveSql(major),toSelectiveSql(year));
+    }
+
+    @Override
+    public Student findStudentByStudentId(String studentId) {
+        return studentMapper.selectStudentByStudentId(studentId);
+    }
+
+    @Override
+    public boolean updateStudentByStudentId(Student student) {
+        return studentMapper.updateStudentByStudentId(student) == 1;
+    }
+
+    @Override
+    public List<String> findAllDepartments() {
+        return studentMapper.selectAllDepartments();
+    }
+
+    @Override
+    public List<String> findMajorByDepartment(String department) {
+        return studentMapper.selectMajorByDepartment(department);
+    }
+
+    @Override
+    public List<String> findStudentClassByMajor(String major) {
+        return studentMapper.selectStudentClassByMajor(major);
+    }
+
+    /**
+     * 条件查询把参数转换为sql
+     * @param str 参数
+     * @return 模糊查询的关键词
+     */
+    private String toSelectiveSql(String str) {
+        return str=str.isEmpty()?"%":"%"+str+"%";
     }
 }

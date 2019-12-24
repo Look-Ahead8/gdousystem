@@ -28,4 +28,9 @@ public class PermissionServiceImpl implements PermissionService {
     public List<Permission> findPermissionByTeacherId(String teacherId){
         return permissionMapper.selectPermissionByTeacherId(teacherId);
     }
+
+    @Override
+    public List<Permission> findPermissionByRoleId(Integer roleId) {
+        return permissionMapper.selectPermissionByRoleId(roleId);
+    }
 }

@@ -13,7 +13,23 @@
         <result column="year" jdbcType="CHAR" property="year"/>
     </resultMap>
 
-    <select id="selectAllStudents"  resultMap="BaseResultMap">
-        SELECT * FROM student
+    <select id="selectAllStudentsSelective"  resultMap="BaseResultMap">
+        SELECT * FROM student WHERE department LIKE #{department} AND major LIKE #{major} AND `year` LIKE #{year}
+    </select>
+    <select id="selectStudentByStudentId" resultMap="BaseResultMap">
+        SELECT * FROM student WHERE student_id=#{studentId}
+    </select>
+    <update id="updateStudentByStudentId" parameterType="com.gdou.gdousystem.bean.Student">
+        UPDATE student SET student_name=#{studentName},department=#{department},major=#{major},phone=#{phone},birthday=#{birthday},student_class=#{studentClass},sex=#{sex},`year`=#{year}
+        WHERE student_id=#{studentId}
+    </update>
+    <select id="selectAllDepartments" resultType="java.lang.String">
+        SELECT DISTINCT department FROM student
+    </select>
+    <select id="selectMajorByDepartment" resultType="java.lang.String">
+        SELECT DISTINCT major FROM student WHERE department=#{department}
+    </select>
+    <select id="selectStudentClassByMajor" resultType="java.lang.String">
+        SELECT DISTINCT student_class FROM student WHERE major=#{major}
     </select>
 </mapper>
