@@ -2,7 +2,9 @@ package com.gdou.gdousystem.dao;
 
 import com.gdou.gdousystem.bean.Course;
 import com.gdou.gdousystem.bean.Schedule;
+import com.gdou.gdousystem.bean.Student;
 import com.gdou.gdousystem.vo.DeleteScheduleVO;
+import com.gdou.gdousystem.vo.GetExcelVO;
 import com.gdou.gdousystem.vo.ScheduleVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +22,6 @@ public interface ScheduleMapper {
     List<Course> selectAllSchedulesSelective(@Param("department") String department,@Param("major") String major,@Param("studentClass") String studentClass);
 
     int deleteScheduleByDeleteScheduleVO(DeleteScheduleVO schedule);
+
+    List<Student> selectScheduleByCourseAndTermAndTeacherId(GetExcelVO getExcelVO);
 }

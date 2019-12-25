@@ -14,4 +14,7 @@ LEFT JOIN course ON course.`course_id`=schedule.`course_id` LEFT JOIN teacher ON
     <delete id="deleteScheduleByDeleteScheduleVO" parameterType="com.gdou.gdousystem.vo.DeleteScheduleVO">
         DELETE `schedule` FROM `schedule`,student WHERE   teacher_id=#{teacherId} AND `version`=#{version} AND term=#{term} AND student.`student_class`=#{studentClass}
     </delete>
+    <select id="selectScheduleByCourseAndTermAndTeacherId" parameterType="com.gdou.gdousystem.vo.GetExcelVO" resultType="com.gdou.gdousystem.bean.Student">
+        SELECT `schedule`.`student_id`,`student`.`student_name` FROM `schedule` LEFT JOIN student ON `schedule`.student_id=student.student_id WHERE version=#{version} AND course_id=#{courseId} AND teacher_id=#{teacherId} AND term=#{term} AND student_class=#{studentClass}
+    </select>
 </mapper>

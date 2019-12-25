@@ -8,6 +8,7 @@
 </head>
 <body>
 <input type="text" id="teacherId" name="teacherId"/><input type="password" id="password" name="password"/><input id="login" type="button"/><input id="save" type="button"/><input type="button" id="get"/>
+<br/><a href="/score/createExecl?term=2017&&courseId=1&&version=2017&&studentClass=软件卓越1171">点击生成execl</a>
 </body>
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 <script>
@@ -44,7 +45,7 @@ document.getElementById("save").onclick=function(){
 document.getElementById("get").onclick=function(){
     $.ajax({
         method:"get",
-        url:"/course/test",
+        url:"/user/students",
         success:function(data){
             console.log(data)
         }

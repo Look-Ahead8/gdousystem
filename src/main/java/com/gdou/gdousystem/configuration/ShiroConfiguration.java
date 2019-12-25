@@ -31,6 +31,7 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/error/*","anon");          //静态资源不拦截
         filterChainDefinitionMap.put("/login","anon");            //登录不拦截
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+        filterChainDefinitionMap.put("/test.html","anon");
         filterChainDefinitionMap.put("/webjars/**", "anon");
         filterChainDefinitionMap.put("/v2/**", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");

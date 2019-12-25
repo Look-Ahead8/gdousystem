@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdou.gdousystem.dao.ExaminationDetailMapper">
+    <select id="selectAllCourseExaminationSelective" resultType="com.gdou.gdousystem.dto.ExaminationDetailDto">
+         SELECT examination_detail.`detail_name`,examination_type.`type`,examination_detail.`detail_score`,examination_detail.`detail_weight`,examination_detail.`is_weight`,teaching_target.`target_name` FROM examination_detail LEFT JOIN teaching_target ON examination_detail.`target_id`=teaching_target.`target_id`
+   LEFT JOIN course_examination_weight ON course_examination_weight.`cour_exam_weight_id`= examination_detail.`cour_exam_weight_id`
+   LEFT JOIN examination_type ON examination_type.`examination_type_id` =course_examination_weight.`examination_type_id`
+   WHERE examination_type.`type` LIKE #{type} AND teaching_target.`course_id` LIKE #{courseId} AND teaching_target.`version` LIKE #{version}
+    </select>
+    <select id="selectAllDetailsByTeacherAndCourseAndTerm" parameterType="com.gdou.gdousystem.vo.GetExcelVO"  resultType="com.gdou.gdousystem.dto.ExeclHeaderDto">
+        SELECT DISTINCT examination_detail.detail_name,examination_detail.`detail_score`,examination_detail.`detail_weight`,examination_detail.`is_weight`,teaching_target.`target_name` FROM examination_detail LEFT JOIN teaching_target ON examination_detail.`target_id`=teaching_target.`target_id`
+ LEFT JOIN course ON teaching_target.`course_id`=course.`course_id` AND teaching_target.`version`=course.`version`
+ LEFT JOIN `schedule` ON `schedule`.`course_id`=course.`course_id` AND `schedule`.`version`=course.`version`
+ WHERE `schedule`.term=#{term} AND `schedule`.`teacher_id`=#{teacherId} AND `schedule`.`version`=#{version} AND `schedule`.`course_id`=#{courseId} ORDER BY detail_name
+    </select>
+</mapper>
