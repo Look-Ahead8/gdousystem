@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdou.gdousystem.dao.ScheduleMapper">
+    <insert id="insertSchedule" parameterType="com.gdou.gdousystem.vo.ScheduleVO">
+         INSERT INTO schedule(version,course_id,teacher_id,term,student_id) VALUES(#{version},#{courseId},#{teacherId},#{term},#{studentId})
+    </insert>
+    <select id="selectScheduleByVersionAndCourseIdAndTeacherIdAndTermAndStudentId" resultType="com.gdou.gdousystem.bean.Schedule">
+        SELECT * FROM schedule WHERE version=#{version} AND course_id=#{courseId} AND teacher_id=#{teacherId} AND  term=#{term} AND student_id=#{studentId}
+    </select>
+    <select id="selectAllSchedulesSelective" resultType="com.gdou.gdousystem.dto.ScheduleDto">
+SELECT  DISTINCT student.`department`,student.`major`,student.`student_class`,teacher.`username`,schedule.`course_id`,course.`course_name`,schedule.`version`,schedule.`term` FROM schedule LEFT JOIN student ON schedule.`student_id`=student.`student_id`
+LEFT JOIN course ON course.`course_id`=schedule.`course_id` LEFT JOIN teacher ON teacher.`teacher_id`=schedule.`teacher_id` WHERE student.department LIKE #{department} AND student.major like #{major} AND student.student_class LIKE #{studentClass}
+    </select>
+    <delete id="deleteScheduleByDeleteScheduleVO" parameterType="com.gdou.gdousystem.vo.DeleteScheduleVO">
+        DELETE `schedule` FROM `schedule`,student WHERE   teacher_id=#{teacherId} AND `version`=#{version} AND term=#{term} AND student.`student_class`=#{studentClass}
+    </delete>
+</mapper>

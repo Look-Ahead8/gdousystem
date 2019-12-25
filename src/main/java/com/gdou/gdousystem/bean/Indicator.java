@@ -1,5 +1,6 @@
 package com.gdou.gdousystem.bean;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -8,9 +9,11 @@ import java.util.List;
  */
 public class Indicator {
     private String indicatorId;
+    @NotBlank(message = "指标点内容不可以为空")
     private String indicatorContent;
+    @NotBlank(message = "指标带你名称不可以为空")
     private String indicatorName;
-    private Integer graduationRequirementId;
+    private GraduationRequirement graduationRequirement;
     private List<TeacherTarget> teacherTarget;
 
     public String getIndicatorId() {
@@ -37,12 +40,12 @@ public class Indicator {
         this.indicatorName = indicatorName;
     }
 
-    public Integer getGraduationRequirementId() {
-        return graduationRequirementId;
+    public GraduationRequirement getGraduationRequirement() {
+        return graduationRequirement;
     }
 
-    public void setGraduationRequirementId(Integer graduationRequirementId) {
-        this.graduationRequirementId = graduationRequirementId;
+    public void setGraduationRequirement(GraduationRequirement graduationRequirement) {
+        this.graduationRequirement = graduationRequirement;
     }
 
     public List<TeacherTarget> getTeacherTarget() {

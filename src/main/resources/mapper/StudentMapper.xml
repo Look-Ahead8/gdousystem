@@ -32,4 +32,7 @@
     <select id="selectStudentClassByMajor" resultType="java.lang.String">
         SELECT DISTINCT student_class FROM student WHERE major=#{major}
     </select>
+    <select id="selectAllStudentIdByDepartmentAndMajorAndStudentClass" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT student_id FROM student WHERE department=#{department} AND major=#{major} AND student_class=#{studentClass}
+    </select>
 </mapper>

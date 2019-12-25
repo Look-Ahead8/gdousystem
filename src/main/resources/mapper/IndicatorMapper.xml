@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdou.gdousystem.dao.IndicatorMapper">
+    <resultMap id="BaseResultMapWithGraduationRequirement" type="com.gdou.gdousystem.bean.Indicator">
+        <id column="indicator_id" jdbcType="INTEGER" property="indicatorId"/>
+        <result column="indicator_content" jdbcType="VARCHAR" property="indicatorContent"/>
+        <result column="indicator_name" jdbcType="VARCHAR" property="indicatorName"/>
+        <association property="graduationRequirement" javaType="com.gdou.gdousystem.bean.GraduationRequirement">
+            <id column="graduation_requirement_id" jdbcType="INTEGER" property="graduationRequirementId"/>
+            <result column="content" jdbcType="VARCHAR" property="content"/>
+            <result column="version" jdbcType="CHAR" property="version"/>
+        </association>
+    </resultMap>
+
+    <select id="selectAllIndicators" resultMap="BaseResultMapWithGraduationRequirement">
+        SELECT * FROM indicators,graduation_requirements WHERE indicators.`graduation_requirement_id`=graduation_requirements.`graduation_requirement_id`
+    </select>
+    <insert id="insertIndicator" parameterType="com.gdou.gdousystem.bean.Indicator">
+        INSERT INTO indicators(indicator_content,indicator_name,graduation_requirement_id) VALUES(#{indicatorContent},#{indicatorName},#{graduationRequirement.graduationRequirementId})
+    </insert>
+</mapper>

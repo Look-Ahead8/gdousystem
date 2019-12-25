@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdou.gdousystem.dao.GraduationRequirementMapper">
+    <resultMap id="BaseResultMapWithIndicator" type="com.gdou.gdousystem.bean.GraduationRequirement">
+        <id column="graduation_requirement_id" jdbcType="INTEGER" property="graduationRequirementId"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="version" jdbcType="CHAR" property="version"/>
+        <collection property="indicator" ofType="com.gdou.gdousystem.bean.Indicator">
+            <id column="indicator_id" jdbcType="INTEGER" property="indicatorId"/>
+            <result column="indicator_content" jdbcType="VARCHAR" property="indicatorContent"/>
+            <result column="indicator_name" jdbcType="VARCHAR" property="indicatorName"/>
+        </collection>
+    </resultMap>
+    <select id="selectAllGraduationRequirements" resultType="com.gdou.gdousystem.bean.GraduationRequirement">
+        SELECT * FROM graduation_requirements
+    </select>
+    <insert id="insertGraduationRequirement" parameterType="com.gdou.gdousystem.bean.GraduationRequirement">
+        INSERT INTO graduation_requirements(content,version) VALUES(#{content},#{version})
+    </insert>
+    <select id="selectGraduationRequirementById" parameterType="java.lang.Integer" resultMap="BaseResultMapWithIndicator">
+        SELECT * FROM graduation_requirements,indicators WHERE graduation_requirements.`graduation_requirement_id`=indicators.`graduation_requirement_id` AND graduation_requirements.`graduation_requirement_id`=#{id}
+    </select>
+    <delete id="deleteGraduationRequirement" parameterType="java.lang.Integer">
+        DELETE FROM graduation_requirements WHERE graduation_requirement_id=#{graduationRequirementId}
+    </delete>
+</mapper>

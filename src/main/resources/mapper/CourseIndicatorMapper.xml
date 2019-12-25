@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdou.gdousystem.dao.CourseIndicatorMapper">
+    <select id="selectAllCoursesIndicatorSelective" parameterType="java.lang.String" resultType="com.gdou.gdousystem.dto.CourseIndicatorDto">
+SELECT course_indicator_weight.weight_id,course.`course_id`,course.`course_name`,course.`version`,course_indicator_weight.`course_indicator_weight` FROM indicators LEFT JOIN course_indicator_weight ON indicators.`indicator_id`=course_indicator_weight.`indicator_id` LEFT JOIN course ON course_indicator_weight.`course_id`=course.`course_id`
+WHERE indicators.`indicator_name` LIKE #{var}
+    </select>
+</mapper>

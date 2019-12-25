@@ -30,8 +30,11 @@ public class ShiroConfiguration {
         Map<String,String> filterChainDefinitionMap=new LinkedHashMap<>();
         filterChainDefinitionMap.put("/error/*","anon");          //静态资源不拦截
         filterChainDefinitionMap.put("/login","anon");            //登录不拦截
+        filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+        filterChainDefinitionMap.put("/webjars/**", "anon");
+        filterChainDefinitionMap.put("/v2/**", "anon");
+        filterChainDefinitionMap.put("/swagger-resources/**", "anon");
         filterChainDefinitionMap.put("/logout","logout");         //使用shiro实现好的的退出
-        filterChainDefinitionMap.put("/test.html","anon");
         filterChainDefinitionMap.put("/course/*","perms[课程管理]");
         filterChainDefinitionMap.put("/examination/*","perms[考核管理]");
         filterChainDefinitionMap.put("/schedule/*","perms[课表管理]");
