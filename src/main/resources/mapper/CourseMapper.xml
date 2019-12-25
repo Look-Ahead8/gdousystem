@@ -29,4 +29,327 @@
     <select id="selectCourseByCourseIdAndVersion" resultType="com.gdou.gdousystem.bean.Course">
         SELECT * FROM course WHERE course_id=#{courseId} AND version=#{version}
     </select>
+
+    <select id="sql1" resultType="com.gdou.gdousystem.dto.Sql1Dto">
+           SELECT tableq.target_id,
+tableq.target_name,
+tableq.content,
+(tableq.sum / tabler.number) AS actual_sum,
+table3.target_sum,
+CONVERT((tableq.sum / tabler.number / table3.target_sum),DECIMAL(10,2)) AS result FROM
+(
+/*获取每个目标的总分*/
+SELECT table1.target_id, table1.target_name, table1.content, CONVERT(SUM(table1.result),DECIMAL(10,1)) AS SUM FROM
+(
+	SELECT target_detail_score.score, exam_detail.detail_weight,
+exam_detail.detail_name, tt.target_id, tt.target_name, tt.content, cour_exam_weight.examination_weight,
+((CASE WHEN detail_weight IS NULL
+   THEN target_detail_score.score
+	 ELSE target_detail_score.score * exam_detail.detail_weight / 100 END) * cour_exam_weight.examination_weight) AS result
+FROM
+target_detail_score target_detail_score, examination_detail exam_detail,
+teaching_target tt, course_examination_weight cour_exam_weight, course cour
+WHERE target_detail_score.examination_detail_id = exam_detail.examination_detail_id
+AND exam_detail.target_id = tt.target_id
+AND tt.course_id = cour.course_id
+AND cour.course_name = #{courseName}
+AND cour.version = #{version}
+-- 该成绩的学生届别是2017
+AND target_detail_score.year = #{version}
+-- 该权重对应的学生届别是2017
+AND cour_exam_weight.level = #{version}
+AND exam_detail.cour_exam_weight_id = cour_exam_weight.cour_exam_weight_id
+) AS table1
+GROUP BY table1.target_id
+) AS tableq,
+(
+/*获取学生人数*/
+SELECT COUNT(target_detail_score.schedule_id) AS number
+FROM
+target_detail_score target_detail_score, examination_detail exam_detail,
+teaching_target tt, course_examination_weight cour_exam_weight, course cour
+WHERE target_detail_score.examination_detail_id = exam_detail.examination_detail_id
+AND exam_detail.target_id = tt.target_id
+AND tt.course_id = cour.course_id
+AND cour.course_name = #{courseName}
+AND cour.version =#{version}
+AND target_detail_score.year = #{version}
+AND cour_exam_weight.level = #{version}
+AND exam_detail.cour_exam_weight_id = cour_exam_weight.cour_exam_weight_id
+GROUP BY target_detail_score.schedule_id
+LIMIT 0,1
+) AS tabler,
+(SELECT
+all_target_table.target_id,
+all_target_table.target_name,
+all_target_table.content,
+SUM(CONVERT(((CASE WHEN exam_detail.detail_score IS NULL THEN exam_detail.detail_weight ELSE exam_detail.detail_score END) * cour_exam_weight.examination_weight),DECIMAL(10,2))) AS target_sum
+FROM
+(
+	/*获取一个课程下所有的目标*/
+	SELECT tt.target_id, tt.target_name, tt.content, cour.course_name FROM teaching_target tt, course cour
+	WHERE tt.course_id = cour.course_id
+	AND tt.version = cour.version
+  -- 某一门课程
+	AND cour.course_name = #{courseName}
+	AND cour.version = #{version}
+) AS all_target_table, examination_detail exam_detail, course_examination_weight cour_exam_weight, examination_type exam_type
+WHERE all_target_table.target_id = exam_detail.target_id
+AND exam_detail.cour_exam_weight_id = cour_exam_weight.cour_exam_weight_id
+-- 学生届别
+AND cour_exam_weight.level = #{version}
+AND exam_type.examination_type_id = cour_exam_weight.examination_type_id
+GROUP BY all_target_table.target_id) AS table3
+WHERE table3.target_id = tableq.target_id
+    </select>
+
+
+
+
+    <select id="sql2" resultType="com.gdou.gdousystem.dto.Sql2Dto">
+SELECT table1.target_name,exam_type.type, (table1.sum / table2.number) AS result FROM
+(
+	SELECT table1.target_name, table1.examination_type_id,
+	CONVERT(SUM(table1.result),DECIMAL(10,1)) AS SUM
+	FROM
+		(
+			SELECT cour_exam_weight.examination_type_id,target_detail_score.score, exam_detail.detail_weight,
+			exam_detail.detail_name, tt.target_id, tt.target_name, tt.content, cour_exam_weight.examination_weight,
+			((CASE WHEN detail_weight IS NULL
+				 THEN target_detail_score.score
+				 ELSE target_detail_score.score * exam_detail.detail_weight / 100 END)) AS result
+			FROM
+			target_detail_score target_detail_score, examination_detail exam_detail,
+			teaching_target tt, course_examination_weight cour_exam_weight, course cour
+			WHERE target_detail_score.examination_detail_id = exam_detail.examination_detail_id
+			AND exam_detail.target_id = tt.target_id
+			AND tt.course_id = cour.course_id
+			AND cour.course_name = #{courseName}
+			AND cour.version = #{version}
+			-- 该成绩的学生届别是2017
+			AND target_detail_score.year = #{version}
+			-- 该权重对应的学生届别是2017
+			AND cour_exam_weight.level = #{version}
+			AND exam_detail.cour_exam_weight_id = cour_exam_weight.cour_exam_weight_id
+		) AS table1
+		WHERE table1.target_name = #{targetName}
+		GROUP BY table1.examination_type_id
+) AS table1,
+(
+	/*获得学生的人数*/
+	SELECT COUNT(target_detail_score.schedule_id) AS number
+	FROM
+	target_detail_score target_detail_score, examination_detail exam_detail,
+	teaching_target tt, course_examination_weight cour_exam_weight, course cour
+	WHERE target_detail_score.examination_detail_id = exam_detail.examination_detail_id
+	AND exam_detail.target_id = tt.target_id
+	AND tt.course_id = cour.course_id
+	AND cour.course_name = #{courseName}
+	AND cour.version = #{version}
+	AND target_detail_score.year = #{version}
+	AND cour_exam_weight.level = #{version}
+	AND exam_detail.cour_exam_weight_id = cour_exam_weight.cour_exam_weight_id
+	GROUP BY target_detail_score.schedule_id
+	LIMIT 0,1
+) AS table2,examination_type exam_type
+WHERE table1.examination_type_id = exam_type.examination_type_id
+
+    </select>
+
+	<select id="selectIndividualAchiebement" resultType="com.gdou.gdousystem.dto.IndividualAchievementDto">
+		/*计算出课程各个教学目标的个体达成度值*/
+/*输入参数：课程名、版本号、学生届别*/
+SELECT
+table_right.target_id,
+table_right.target_name,
+table_right.content,
+table_right.target_sum,
+table_right.target_threshold,
+COUNT(table_left.student_score - table_right.target_threshold > 0) AS pass_student_numbers,
+COUNT(*) AS total_student_numbers,
+(COUNT(table_left.student_score - table_right.target_threshold > 0) / COUNT(*)) AS pass_rate FROM
+(SELECT table1.target_id,table1.schedule_id, CONVERT(SUM(result),DECIMAL(10,2)) AS student_score
+FROM
+(
+    /*获取一个课程下每个学生的各个目标的实际得分*/
+	SELECT target_detail_score.score,
+	target_detail_score.schedule_id,
+	exam_detail.detail_weight,
+	exam_detail.detail_score,
+	exam_detail.target_id,
+	cour_exam_weight.examination_weight,
+	(CASE WHEN exam_detail.detail_weight IS NULL THEN target_detail_score.score ELSE target_detail_score.score * exam_detail.detail_weight / 100 END) * cour_exam_weight.examination_weight AS result
+	FROM
+	target_detail_score target_detail_score,
+	examination_detail exam_detail,
+	course_examination_weight cour_exam_weight
+	WHERE
+	target_detail_score.examination_detail_id = exam_detail.examination_detail_id
+	AND exam_detail.cour_exam_weight_id = cour_exam_weight.cour_exam_weight_id
+	AND cour_exam_weight.course_name = '计算机网络'
+	AND cour_exam_weight.level = '2017'
+	AND target_detail_score.year = '2017'
+) AS table1
+-- 同时对目标id和排课id进行分组,得出每位学生每个目标的实际得分
+GROUP BY table1.schedule_id,table1.target_id
+) AS table_left,
+(
+/*得出各个目标的目标总分和目标阈值*/
+SELECT
+all_target_table.target_id,
+all_target_table.target_name,
+all_target_table.content,
+SUM(CONVERT(((CASE WHEN exam_detail.detail_score IS NULL THEN exam_detail.detail_weight ELSE exam_detail.detail_score END) * cour_exam_weight.examination_weight),DECIMAL(10,2))) AS target_sum,
+SUM(CONVERT(((CASE WHEN exam_detail.detail_score IS NULL THEN exam_detail.detail_weight ELSE exam_detail.detail_score END) * cour_exam_weight.examination_weight),DECIMAL(10,2))) * 0.6 AS target_threshold
+FROM
+(
+	/*获取一个课程下所有的目标*/
+	SELECT tt.target_id, tt.target_name, tt.content, cour.course_name FROM teaching_target tt, course cour
+	WHERE tt.course_id = cour.course_id
+	AND tt.version = cour.version
+  -- 某一门课程
+	AND cour.course_name = #{courseName}
+	AND cour.version = #{version}
+  --
+) AS all_target_table, examination_detail exam_detail, course_examination_weight cour_exam_weight, examination_type exam_type
+WHERE all_target_table.target_id = exam_detail.target_id
+AND exam_detail.cour_exam_weight_id = cour_exam_weight.cour_exam_weight_id
+-- 学生届别
+AND cour_exam_weight.level = #{level}
+AND exam_type.examination_type_id = cour_exam_weight.examination_type_id
+GROUP BY all_target_table.target_id) AS table_right
+WHERE table_left.target_id = table_right.target_id
+-- AND table_right.target_name = '目标1'
+GROUP BY table_left.target_id
+	</select>
+
+
+
+
+
+
+	<select id="selectGraduationRequirementReach" resultType="com.gdou.gdousystem.dto.GraduationRequirementReachDto">
+		/*获取各个课程的指标1.1的各个目标的毕业要求的达成度*/
+/*参数：指标点名字，学生届别*/
+/*如果想获取某一门课程的对应指标的毕业要求达成度，则可以加上条件*/
+SELECT
+*
+FROM
+(
+	/*求出所有课程目标的毕业要求达成度及对应的课程指标权重*/
+	SELECT DISTINCT tableq.course_id, tableq.version, indic.indicator_name,
+	tableq.target_id, tableq.target_name,tableq.content,
+	( tableq.sum / tabler.number ) AS actual_sum,
+	table3.target_sum,
+	CONVERT ( ( tableq.sum / tabler.number / table3.target_sum ), DECIMAL ( 10, 2 ) ) AS result,
+	indic_target.support_rate,
+	indic_target.weight,
+  -- 课程对毕业要求的达成度
+	CONVERT ((CONVERT((tableq.sum / tabler.number / table3.target_sum ), DECIMAL ( 10, 2 ) ) * indic_target.support_rate * indic_target.weight),DECIMAL ( 10, 2 ) )
+	AS 'graduation_achieve',
+	cour_indic_weight.course_indicator_weight
+	FROM
+	(
+		/*获取每个目标的总分*/
+		SELECT table1.course_id,table1.version,table1.target_id,
+		table1.target_name,table1.content,
+		CONVERT ( SUM( table1.result ), DECIMAL ( 10, 1 ) ) AS SUM
+		FROM
+		(
+			/**/
+			SELECT tt.course_id,tt.version,target_detail_score.score,
+			exam_detail.detail_weight,exam_detail.detail_name,tt.target_id,
+			tt.target_name,tt.content,cour_exam_weight.examination_weight,
+			(( CASE WHEN detail_weight IS NULL THEN target_detail_score.score ELSE target_detail_score.score * exam_detail.detail_weight / 100 END )
+			* cour_exam_weight.examination_weight) AS result
+			FROM
+				target_detail_score target_detail_score,
+				examination_detail exam_detail,
+				teaching_target tt,
+				course_examination_weight cour_exam_weight,
+				course cour
+			WHERE
+				target_detail_score.examination_detail_id = exam_detail.examination_detail_id
+				AND exam_detail.target_id = tt.target_id
+				AND tt.course_id = cour.course_id
+				-- AND cour.course_name = '高等数学'
+				-- AND cour.version = '2017'
+				AND target_detail_score.year = #{level} -- 该成绩的学生届别是2017
+				AND cour_exam_weight.level = #{level} -- 该权重对应的学生届别是2017
+				AND exam_detail.cour_exam_weight_id = cour_exam_weight.cour_exam_weight_id
+			) AS table1
+			GROUP BY table1.target_id
+		) AS tableq,
+		(
+		/*获取学生人数*/
+		SELECT COUNT( target_detail_score.schedule_id ) AS number
+		FROM
+		target_detail_score target_detail_score,
+		examination_detail exam_detail,
+		teaching_target tt,
+		course_examination_weight cour_exam_weight,
+		course cour
+		WHERE
+			target_detail_score.examination_detail_id = exam_detail.examination_detail_id
+			AND exam_detail.target_id = tt.target_id
+			AND tt.course_id = cour.course_id
+			-- AND cour.course_name = '高等数学'
+			-- AND cour.version = '2017'
+			AND target_detail_score.YEAR = #{level}
+			AND cour_exam_weight.LEVEL = #{level}
+			AND exam_detail.cour_exam_weight_id = cour_exam_weight.cour_exam_weight_id
+			GROUP BY
+				target_detail_score.schedule_id
+			LIMIT 0,1
+			) AS tabler,
+			(
+			SELECT
+				all_target_table.target_id,
+				all_target_table.target_name,
+				all_target_table.content,
+				SUM(CONVERT(((CASE WHEN exam_detail.detail_score IS NULL
+				THEN exam_detail.detail_weight
+				ELSE exam_detail.detail_score END)
+				* cour_exam_weight.examination_weight ),DECIMAL ( 10, 2 ) ) ) AS target_sum
+				FROM
+				(
+				/*获取一个课程下所有的目标*/
+				SELECT
+					tt.target_id,
+					tt.target_name,
+					tt.content,
+					cour.course_name
+				FROM
+					teaching_target tt,
+					course cour
+				WHERE
+					tt.course_id = cour.course_id
+					AND tt.version = cour.version -- 某一门课程
+					-- 	AND cour.course_name = '高等数学'
+					-- 	AND cour.version = '2017'
+					) AS all_target_table,
+					examination_detail exam_detail,
+					course_examination_weight cour_exam_weight,
+					examination_type exam_type
+					WHERE
+						all_target_table.target_id = exam_detail.target_id
+						AND exam_detail.cour_exam_weight_id = cour_exam_weight.cour_exam_weight_id
+						AND cour_exam_weight.LEVEL = #{level} 	-- 学生届别
+						AND exam_type.examination_type_id = cour_exam_weight.examination_type_id
+					GROUP BY all_target_table.target_id
+				) AS table3,
+				indicator_target indic_target,
+				indicators indic,
+				course_indicator_weight cour_indic_weight
+				WHERE
+					table3.target_id = tableq.target_id
+					AND indic_target.target_id = tableq.target_id
+					AND indic_target.indicator_id = indic.indicator_id
+					AND cour_indic_weight.indicator_id = indic.indicator_id
+					AND indic.indicator_name = #{indicatorName} -- 指标名字
+					AND indic_target.YEAR = #{level}	-- 学生届别
+					AND tableq.course_id = cour_indic_weight.course_id
+					AND tableq.version = cour_indic_weight.version
+) AS table1,course WHERE table1.version=course.`version` AND table1.course_id=course.`course_id`
+	</select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.gdou.gdousystem.configuration;
 
 import com.gdou.gdousystem.filter.ShiroPermsFilter;
+import com.gdou.gdousystem.filter.ShiroRolesFilter;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -27,6 +28,7 @@ public class ShiroConfiguration {
         ShiroFilterFactoryBean shiroFilterFactoryBean=new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.getFilters().put("perms",new ShiroPermsFilter());
+        shiroFilterFactoryBean.getFilters().put("roles",new ShiroRolesFilter());
         Map<String,String> filterChainDefinitionMap=new LinkedHashMap<>();
         filterChainDefinitionMap.put("/error/*","anon");          //静态资源不拦截
         filterChainDefinitionMap.put("/login","anon");            //登录不拦截
@@ -36,6 +38,8 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/v2/**", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
         filterChainDefinitionMap.put("/logout","logout");         //使用shiro实现好的的退出
+        filterChainDefinitionMap.put("/course/graduationrequirementreach","roles[超级管理员]");
+        filterChainDefinitionMap.put("/course/graduationrequirementreachexcel","roles[超级管理员]");
         filterChainDefinitionMap.put("/course/*","perms[课程管理]");
         filterChainDefinitionMap.put("/examination/*","perms[考核管理]");
         filterChainDefinitionMap.put("/schedule/*","perms[课表管理]");
