@@ -33,7 +33,7 @@ public class StudentController {
      * @return 第pn页的学生数据
      */
     @GetMapping("/students")
-    public Message findAllStudents(@RequestParam(value = "pn",defaultValue = "1")Integer pn,@RequestParam(value = "department",defaultValue = "")String department,@RequestParam(value = "majpr",defaultValue = "") String major,@RequestParam(value = "year",defaultValue = "")String year){
+    public Message findAllStudents(@RequestParam(value = "pn",defaultValue = "1")Integer pn,@RequestParam(value = "department",defaultValue = "")String department,@RequestParam(value = "major",defaultValue = "") String major,@RequestParam(value = "year",defaultValue = "")String year){
         PageHelper.startPage(pn,10);
         List<Student> students=studentService.findAllStudentsSelective(department,major,year);
         PageInfo<Student> pageInfo=new PageInfo<>(students,5);

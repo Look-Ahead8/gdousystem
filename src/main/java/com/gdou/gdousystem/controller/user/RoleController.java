@@ -1,11 +1,15 @@
 package com.gdou.gdousystem.controller.user;
 
+import com.gdou.gdousystem.bean.Role;
+import com.gdou.gdousystem.message.Message;
 import com.gdou.gdousystem.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author Meng
@@ -18,4 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoleController {
     @Autowired
     private RoleService roleService;
+
+    @RequestMapping("/roles")
+    public Message findAllRoles(){
+        List<Role> list=roleService.findAllRoles();
+        return Message.success().add("roles",list);
+    }
 }

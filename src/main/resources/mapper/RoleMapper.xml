@@ -9,4 +9,8 @@
     <select id="selectRoleByTeacherId" parameterType="java.lang.String" resultType="com.gdou.gdousystem.bean.Role">
         SELECT role.* FROM role ,teacher_role,teacher WHERE role.role_id=teacher_role.role_id AND teacher.teacher_id=teacher_role.teacher_id AND teacher.teacher_id=#{teacherId}
     </select>
+
+    <select id="selectAllRoles" resultType="com.gdou.gdousystem.bean.Role">
+        SELECT * FROM role
+    </select>
 </mapper>
