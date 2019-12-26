@@ -35,7 +35,6 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public List<Teacher> findAllTeachersSelective(String username,Integer roleId) {
         username=username.isEmpty()?"%":"%"+username+"%";
-        System.out.println(username);
         roleId=roleId==0?null:roleId;
         return teacherMapper.selectAllTeachersSelective(username,roleId);
     }

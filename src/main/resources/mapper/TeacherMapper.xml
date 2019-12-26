@@ -28,8 +28,8 @@
         SELECT teacher.*,role.* FROM teacher LEFT JOIN teacher_role ON teacher.`teacher_id`=teacher_role.`teacher_id` LEFT JOIN role ON role.`role_id` = teacher_role.`role_id`
 WHERE teacher.`teacher_id`=#{teacherId}
     </select>
-    <select id="selectAllTeachersSelective" resultMap="BaseResultMap">
-        SELECT DISTINCT teacher.* FROM teacher LEFT JOIN teacher_role ON teacher.`teacher_id`=teacher_role.`teacher_id` WHERE
+    <select id="selectAllTeachersSelective" resultMap="BaseResultMapWithRole">
+        SELECT DISTINCT teacher.*,role.* FROM teacher LEFT JOIN teacher_role ON teacher.`teacher_id`=teacher_role.`teacher_id` LEFT JOIN role ON role.`role_id` = teacher_role.`role_id` WHERE
         <if test="roleId!=null">
             teacher_role.`role_id` LIKE #{roleId} AND
         </if>
