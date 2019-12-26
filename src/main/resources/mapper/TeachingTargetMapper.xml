@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdou.gdousystem.dao.TeachingTargetMapper">
+    <select id="selectAllTargetIndicatorSelective" parameterType="java.lang.String" resultType="com.gdou.gdousystem.dto.IndicatorTargetDto">
+SELECT teaching_target.`target_name`,teaching_target.`content`,indicator_target.`support_rate`,indicator_target.`weight`,indicator_target.`year` FROM indicators LEFT JOIN indicator_target ON indicators.`indicator_id`=indicator_target.`indicator_id` LEFT JOIN teaching_target ON indicator_target.`target_id`=teaching_target.`target_id`
+WHERE indicators.`indicator_name` LIKE #{indicatorName}
+    </select>
+</mapper>
