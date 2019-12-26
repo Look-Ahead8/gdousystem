@@ -1,6 +1,7 @@
 package com.gdou.gdousystem.service;
 
 import com.gdou.gdousystem.dto.IndicatorTargetDto;
+import com.gdou.gdousystem.dto.TargetCourseDto;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public interface TeachingTargetService {
     List<IndicatorTargetDto> selectAllTargetIndicatorSelective(String indicatorName);
+
+    List<TargetCourseDto> findAllTargetCoursesSelective(String courseName, String version);
 }

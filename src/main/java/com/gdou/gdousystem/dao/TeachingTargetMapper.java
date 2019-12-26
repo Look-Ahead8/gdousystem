@@ -1,6 +1,7 @@
 package com.gdou.gdousystem.dao;
 
 import com.gdou.gdousystem.dto.IndicatorTargetDto;
+import com.gdou.gdousystem.dto.TargetCourseDto;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -11,4 +12,6 @@ import java.util.List;
  */
 public interface TeachingTargetMapper {
     List<IndicatorTargetDto> selectAllTargetIndicatorSelective(@Param("indicatorName") String toSqlParam);
+
+    List<TargetCourseDto> selectAllTargetCoursesSelective(@Param("courseName") String toSqlParam,@Param("version") String toSqlParam1);
 }

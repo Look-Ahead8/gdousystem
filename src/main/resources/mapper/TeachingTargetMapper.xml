@@ -5,4 +5,9 @@
 SELECT teaching_target.`target_name`,teaching_target.`content`,indicator_target.`support_rate`,indicator_target.`weight`,indicator_target.`year` FROM indicators LEFT JOIN indicator_target ON indicators.`indicator_id`=indicator_target.`indicator_id` LEFT JOIN teaching_target ON indicator_target.`target_id`=teaching_target.`target_id`
 WHERE indicators.`indicator_name` LIKE #{indicatorName}
     </select>
+
+    <select id="selectAllTargetCoursesSelective" resultType="com.gdou.gdousystem.dto.TargetCourseDto">
+        SELECT teaching_target.`target_id`,teaching_target.target_name,teaching_target.content,course.course_name,course.`version` FROM teaching_target LEFT JOIN course ON teaching_target.`course_id`= course.`course_id` AND teaching_target.`version`=course.`version`
+WHERE course_name LIKE #{courseName} AND course.`version`  LIKE  #{version}
+    </select>
 </mapper>

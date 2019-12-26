@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gdou.gdousystem.dao.CourseExaminationMapper">
     <select id="selectAllCourseExaminationSelective" resultType="com.gdou.gdousystem.dto.CourseExaminationDto">
-        SELECT course_examination_weight.`course_name`,examination_type.`type`,course_examination_weight.`examination_weight`,course_examination_weight.`level` FROM  course_examination_weight LEFT JOIN examination_type ON course_examination_weight.`examination_type_id`=examination_type.`examination_type_id`
+        SELECT course_examination_weight.`cour_exam_weight_id`,course_examination_weight.`course_name`,examination_type.`type`,course_examination_weight.`examination_weight`,course_examination_weight.`level` FROM  course_examination_weight LEFT JOIN examination_type ON course_examination_weight.`examination_type_id`=examination_type.`examination_type_id`
 WHERE course_examination_weight.`course_name` IN(
 SELECT course_name FROM course WHERE course_id LIKE #{courseId} AND`version` LIKE #{version}	)
     </select>

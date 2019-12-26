@@ -2,6 +2,7 @@ package com.gdou.gdousystem.service.impl;
 
 import com.gdou.gdousystem.dao.TeachingTargetMapper;
 import com.gdou.gdousystem.dto.IndicatorTargetDto;
+import com.gdou.gdousystem.dto.TargetCourseDto;
 import com.gdou.gdousystem.service.TeachingTargetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,11 @@ public class TeachingTargetServiceImpl implements TeachingTargetService {
     @Override
     public List<IndicatorTargetDto> selectAllTargetIndicatorSelective(String indicatorName) {
         return teachingTargetMapper.selectAllTargetIndicatorSelective(toSqlParam(indicatorName));
+    }
+
+    @Override
+    public List<TargetCourseDto> findAllTargetCoursesSelective(String courseName, String version) {
+        return teachingTargetMapper.selectAllTargetCoursesSelective(toSqlParam(courseName),toSqlParam(version));
     }
 
     private String toSqlParam(String str){

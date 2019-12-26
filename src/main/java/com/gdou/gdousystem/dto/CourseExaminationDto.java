@@ -7,6 +7,7 @@ package com.gdou.gdousystem.dto;
 public class CourseExaminationDto {
     private Integer courExamWeightId;
     private String courseName;
+    private String type;
     private String examinationWeight;
     private String level;
 
@@ -40,5 +41,13 @@ public class CourseExaminationDto {
 
     public void setLevel(String level) {
         this.level = level;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
