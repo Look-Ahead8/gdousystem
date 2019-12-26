@@ -103,10 +103,13 @@ public class CourseController {
         HSSFWorkbook workbook=courseService.createOverallachievementExcel(courseName,version);
     }
 
+
     @GetMapping("individualachievement")
-    public Message findIndividualAchiebement(@RequestParam("courseName")String courseName,@RequestParam("version")String version,@RequestParam("level")String level){
+    public Message findIndividualAchiebement(@RequestParam(value = "pn",defaultValue = "1")Integer pn,@RequestParam("courseName")String courseName,@RequestParam("version")String version,@RequestParam("level")String level){
+        PageHelper.startPage(pn, 10);
         List<IndividualAchievementDto> list=courseService.findIndividualAchiebement(courseName,version,level);
-        return Message.success().add("individualAchievement",list);
+        PageInfo<IndividualAchievementDto> pageInfo=new PageInfo<>(list,5);
+        return Message.success().add("pageInfo",pageInfo);
     }
 
     @GetMapping("individualachievementexcel")
@@ -118,7 +121,7 @@ public class CourseController {
     }
 
     @GetMapping("graduationrequirementreach")
-    public Message findGraduationRequirementReach(@RequestParam("indicatorName")String indicatorName,@RequestParam("level") String level){
+    public Message findGraduationRequirementReach(@RequestParam(value = "pn",defaultValue = "1")Integer pn,@RequestParam("indicatorName")String indicatorName,@RequestParam("level") String level){
         List<GraduationRequirementReachDto> list=courseService.findGraduationRequirementReach(indicatorName,level);
         Map<String,Double> map=new HashMap<>();
         Double sum=0.0;
@@ -126,7 +129,9 @@ public class CourseController {
             sum+=graduationRequirementReachDto.getGraduationAchieve();
         }
         map.put(indicatorName,sum);
-        return Message.success().add("graduationRequirement",list).add("total",map);
+        PageHelper.startPage(pn,5);
+        PageInfo<GraduationRequirementReachDto> pageInfo=new PageInfo<>(list,5);
+        return Message.success().add("pageInfo",pageInfo).add("total",map);
     }
 
 
